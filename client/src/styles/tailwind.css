@@ -1,0 +1,17 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+body {
+  @apply bg-primary-4;
+}
+
+button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+input:read-only {
+  @apply bg-gray-400 cursor-default;
+}
