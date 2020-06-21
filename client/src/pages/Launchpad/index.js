@@ -110,6 +110,7 @@ const LaunchpadOffering = ({ offering }) => {
         </div>
         <div className="flex mt-2 px-2 items-center justify-between">
           <div>
+            <p>Token Address: {offering.tokenAddr}</p>
             <p>Start Date: {new Date(parseInt(offering.startDate)).toLocaleDateString()}</p>
             <p>End Date: {new Date(parseInt(offering.endDate)).toLocaleDateString()}</p>
           </div>
