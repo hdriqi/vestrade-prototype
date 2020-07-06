@@ -923,12 +923,12 @@
     "1594042477776": {
       "events": {},
       "links": {},
-      "address": "0x1CFa77C49E83afA56CC2568d63B3fe57EE9157F7",
-      "transactionHash": "0xc7144279a2102733fc9c657c93644ed693cf8d7e5baa0061c38fe4be4106264b"
+      "address": "0x17400ed72211637d9907f82131BCAa5b80C42668",
+      "transactionHash": "0x255b3038c4032b6c6f6481a34496af7e82dd8abc6fa9a98cc71183c2caaa8556"
     }
   },
   "schemaVersion": "3.0.23",
-  "updatedAt": "2020-07-06T13:35:18.989Z",
+  "updatedAt": "2020-07-06T13:41:45.511Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
