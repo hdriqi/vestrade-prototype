@@ -3,6 +3,9 @@ import OfferingFactory from '../client/src/contracts/Vestrade_Offering_Factory.j
 import Store from './src/stores/mongodb';
 import { Indexer } from './src/index';
 
+const MONGODB_URL = 'mongodb://localhost:27017/eth-indexer'
+const ETH_NODE_URL = 'http://3.1.72.190:8545'
+
 const syncTokenCreated = async () => {
   const indexing = {
     events: {
@@ -12,12 +15,12 @@ const syncTokenCreated = async () => {
       }
     },
   };
-  const store = new Store(indexing, 'mongodb://localhost:27017/eth-indexer');
+  const store = new Store(indexing, MONGODB_URL);
   const indexer = new Indexer(
     store, 
     ERC20Factory.abi, 
     '0x0631ea5CC1941dD480A5c5D15c1970CDB7Ce7BF3', 
-    'http://3.1.72.190:8545'
+    ETH_NODE_URL
   );
   await indexer.syncAll({
     fromBlock: 0,
@@ -34,12 +37,12 @@ const syncOfferingEvent = async () => {
       }
     },
   };
-  const store = new Store(indexing, 'mongodb://localhost:27017/eth-indexer');
+  const store = new Store(indexing, MONGODB_URL);
   const indexer = new Indexer(
     store, 
     OfferingFactory.abi, 
     '0x4D1191B9068BDA59d024921d490A2aFe8c7b9b8f', 
-    'http://3.1.72.190:8545'
+    ETH_NODE_URL
   );
   await indexer.syncAll({
     fromBlock: 0,
