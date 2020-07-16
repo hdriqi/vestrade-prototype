@@ -14,7 +14,7 @@ contract Vestrade_Offering is Ownable {
   uint64 public startDate;
   uint64 public endDate;
 
-  event Buy(address addr, address token, uint256 amount, uint256 timestamp);
+  event Buy(address addr, address tokenAddr, uint256 tokens, uint256 amount, uint256 timestamp);
 
   constructor(string memory _name, address _tokenAddr, uint256 _supply, uint256 _rate, uint64 _startDate, uint64 _endDate) public payable {
     name = _name;
@@ -46,24 +46,24 @@ contract Vestrade_Offering is Ownable {
     Vestrade_ERC20(tokenAddr).transfer(owner(), balance);
   }
 
-  function buy(uint256 amount) public payable {
+  function buy(uint256 tokens) public payable {
     require(init, "Offering is not initialized");
     require(
-      amount == msg.value * rate,
+      tokens == msg.value * rate,
       "Amount is not equal to buyer's value x rate"
     );
     require(
-      balance >= amount,
+      balance >= tokens,
       "Purchased token is more than the available token"
     );
     address payable ownerWallet = address(uint160(owner()));
     ownerWallet.transfer(msg.value);
     require(
-      Vestrade_ERC20(tokenAddr).transfer(msg.sender, amount),
+      Vestrade_ERC20(tokenAddr).transfer(msg.sender, tokens),
       "Failed transfer from contract to buyer"
     );
-    balance -= amount;
+    balance -= tokens;
 
-    emit Buy(address(msg.sender), address(tokenAddr), amount, now);
+    emit Buy(address(msg.sender), address(tokenAddr), tokens, msg.value, now);
   }
 }

@@ -45,7 +45,7 @@ export class Indexer {
     this.store.init();
     this.blockchain = new Ethereum(abi, contractAddress, readProviderUrl);
   }
-  async syncAll({ batchSize, fromBlock }) {
+  async syncAll({ batchSize, fromBlock }, { afterBlock } = {  }) {
     const clientStatus = await this.blockchain.clientStatus();
     const { syncing, blockNumber } = clientStatus;
     const toBlock = blockNumber;
@@ -114,6 +114,9 @@ export class Indexer {
         blocksCount = status.blockNumber;
         if (this.store.saveBlockInfo) {
           this.store.saveBlockInfo({ blockNumber: status.blockNumber }).then(() => {});
+        }
+        if (afterBlock) {
+          await afterBlock(events)
         }
       },
     );
