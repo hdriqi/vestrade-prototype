@@ -20,7 +20,8 @@ export default class MongodbStore {
       const mongoConnect = promisify(MongoClient.connect).bind(MongoClient);
       this.client = await mongoConnect(this.mongodbUrl);
       const mongoPath = this.mongodbUrl.split('/');
-      this.db = this.client.db(mongoPath.slice(-1)[0]);
+      this.collection = mongoPath.slice(-1)[0]
+      this.db = this.client.db(this.collection);
     }
   }
   close() {
@@ -41,7 +42,7 @@ export default class MongodbStore {
   }
   async saveBlockInfo(blockInfo) {
     await this.db.collection('BlockInfo').findOneAndUpdate({
-      key: 'blockNumber'
+      key: `${this.indexing.contractAddress}_blockNumber`
     }, {
       $set: {
         value: blockInfo.blockNumber
@@ -52,7 +53,7 @@ export default class MongodbStore {
   }
   async getBlockInfo() {
     const blockInfo = await this.db.collection('BlockInfo').findOne({
-      key: 'blockNumber'
+      key: `${this.indexing.contractAddress}_blockNumber`
     })
     
     if (!blockInfo) {

@@ -14,12 +14,13 @@ const syncTokenCreated = async () => {
         keys: ['name', 'addr']
       }
     },
+    contractAddress: '0x0631ea5CC1941dD480A5c5D15c1970CDB7Ce7BF3'
   };
   const store = new Store(indexing, MONGODB_URL);
   const indexer = new Indexer(
     store, 
     ERC20Factory.abi, 
-    '0x0631ea5CC1941dD480A5c5D15c1970CDB7Ce7BF3', 
+    indexing.contractAddress, 
     ETH_NODE_URL
   );
   await indexer.syncAll({
@@ -36,12 +37,13 @@ const syncOfferingEvent = async () => {
         keys: ['name', 'addr', 'tokenAddr', 'supply', 'rate', 'startDate', 'endDate']
       }
     },
+    contractAddress: '0x4D1191B9068BDA59d024921d490A2aFe8c7b9b8f'
   };
   const store = new Store(indexing, MONGODB_URL);
   const indexer = new Indexer(
     store, 
     OfferingFactory.abi, 
-    '0x4D1191B9068BDA59d024921d490A2aFe8c7b9b8f', 
+    indexing.contractAddress, 
     ETH_NODE_URL
   );
   await indexer.syncAll({
