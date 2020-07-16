@@ -14,7 +14,7 @@ contract Vestrade_Offering is Ownable {
   uint64 public startDate;
   uint64 public endDate;
 
-  event Buy(address addr, address token, uint256 amount);
+  event Buy(address addr, address token, uint256 amount, uint256 timestamp);
 
   constructor(string memory _name, address _tokenAddr, uint256 _supply, uint256 _rate, uint64 _startDate, uint64 _endDate) public payable {
     name = _name;
@@ -64,6 +64,6 @@ contract Vestrade_Offering is Ownable {
     );
     balance -= amount;
 
-    emit Buy(address(msg.sender), address(tokenAddr), amount);
+    emit Buy(address(msg.sender), address(tokenAddr), amount, now);
   }
 }

@@ -27,6 +27,27 @@ const main = async () => {
     })
   })
 
+  server.put('/tokens/:id', async (req, res) => {
+    const tokenAddr = req.params.id
+    const newToken = await token.updateDetail({
+      tokenAddr: tokenAddr,
+      name: req.body.name,
+      symbol: req.body.symbol,
+      address: req.body.address,
+      businessOwner: {
+        name: req.body.businessOwnerName,
+        avatarUrl: req.body.businessOwnerAvatarUrl,
+        bio: req.body.businessOwnerBio,
+      },
+      // prospectusUrl,
+      // thumbnailListUrl,
+    })
+    res.json({
+      success: 1,
+      data: newToken
+    })
+  })
+
   server.get('/offerings', async (req, res) => {
     const offerings = await offering.get()
     res.json({
@@ -34,7 +55,7 @@ const main = async () => {
       data: offerings
     })
   })
-  
+
   server.listen(8000, () => {
     console.log('Listening on PORT 8000')
   })
