@@ -8,7 +8,10 @@ class Token {
     const result = await this.db.collection('TokenCreated').find()
     const arr = await result.toArray()
     const transform = arr.map(data => {
-      return data.args
+      return {
+        name: data.args.name,
+        addr: data.args.addr,
+      }
     })
     return transform
   }

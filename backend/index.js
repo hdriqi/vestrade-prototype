@@ -14,7 +14,7 @@ const main = async () => {
   server.use(bodyParser.json())
 
   const store = new Store('mongodb://localhost:27017')
-  store.init()
+  await store.init()
 
   const token = new Token(store)
   const offering = new Offering(store)
