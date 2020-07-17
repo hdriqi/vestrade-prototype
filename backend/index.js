@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -5,6 +6,8 @@ const cors = require('cors')
 const Store = require('./Store')
 const Token = require('./controllers/Token')
 const Offering = require('./controllers/Offering')
+
+const { multipleUpload } = require('./middleware/multer')
 
 const main = async () => {
   const server = express()
@@ -24,6 +27,14 @@ const main = async () => {
     res.json({
       success: 1,
       data: tokens
+    })
+  })
+
+  server.post('/upload', multipleUpload, async (req, res) => {
+    const files = req.files
+    const response = await store.upload(files[0])
+    res.json({
+      data: response
     })
   })
 
