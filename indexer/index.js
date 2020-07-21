@@ -39,7 +39,8 @@ const syncTokenCreated = async (store) => {
             }, {
               $set: {
                 tokenAddr: event.args.addr,
-                name: event.args.name
+                name: event.args.name,
+                symbol: event.args.symbol
               }
             }, {
               upsert: true
