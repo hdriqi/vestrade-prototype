@@ -3,23 +3,21 @@ const BigNumber = require('bignumber.js')
 class Offering {
   constructor(store) {
     this.store = store
+    this.vestrade = this.store.client.db('vestrade')
   }
 
   async get() {
-    const result = await this.store.client.db('eth-indexer').collection('OfferingEvent').find()
+    const result = await this.vestrade.collection('offering').find()
     const arr = await result.toArray()
-    const transform = arr.map(data => {
-      return {
-        name: data.args.name,
-        addr: data.args.addr,
-        tokenAddr: data.args.tokenAddr,
-        supply: new BigNumber(data.args.supply.value).toString(10),
-        rate: new BigNumber(data.args.rate.value).toString(),
-        startDate: new BigNumber(data.args.startDate.value).toString(),
-        endDate: new BigNumber(data.args.endDate.value).toString(),
-      }
+    const final = arr.map(data => {
+      Object.keys(data).forEach(k => {
+        if (data[k].type === 'BigNumber') {
+          data[k] = new BigNumber(data[k].value).toString(10)
+        }
+      })
+      return data
     })
-    return transform
+    return final
   }
 }
 
