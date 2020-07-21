@@ -1,14 +1,15 @@
 import ERC20Factory from '../client/src/contracts/Vestrade_ERC20_Factory.json';
 import OfferingFactory from '../client/src/contracts/Vestrade_Offering_Factory.json';
 import Offering from '../client/src/contracts/Vestrade_Offering.json';
-import Store from './src/stores/mongodb';
+import IndexerStore from './src/stores/mongodb';
 import { Indexer } from './src/index';
 import { MongoClient } from 'mongodb';
+import BigNumber from 'bignumber.js'
 
 const MONGODB_URL = 'mongodb://localhost:27017/eth-indexer'
 const ETH_NODE_URL = 'http://3.1.72.190:8545'
 
-const syncTokenCreated = async () => {
+const syncTokenCreated = async (store) => {
   const indexing = {
     events: {
       // event TokenCreated(string name, address addr);
@@ -16,11 +17,11 @@ const syncTokenCreated = async () => {
         keys: ['name', 'addr']
       }
     },
-    contractAddress: '0x0631ea5CC1941dD480A5c5D15c1970CDB7Ce7BF3'
+    contractAddress: '0xFbcA95f79905D2245e38EB3a11Ab117e1689B14C'
   };
-  const store = new Store(indexing, MONGODB_URL);
+  const indexerStore = new IndexerStore(indexing, MONGODB_URL);
   const indexer = new Indexer(
-    store,
+    indexerStore,
     ERC20Factory.abi,
     indexing.contractAddress,
     ETH_NODE_URL
@@ -28,10 +29,80 @@ const syncTokenCreated = async () => {
   await indexer.syncAll({
     fromBlock: 0,
     batchSize: 5,
+  }, {
+    afterBlock: async (events) => {
+      if (events.length > 0) {
+        for (const event of events) {
+          if (event.event === 'TokenCreated') {
+            await store.db('vestrade').collection('tokenDetail').findOneAndUpdate({
+              tokenAddr: event.args.addr
+            }, {
+              $set: {
+                tokenAddr: event.args.addr,
+                name: event.args.name
+              }
+            }, {
+              upsert: true
+            })
+          }
+        }
+      }
+    }
   });
 };
 
-const syncOfferingEvent = async () => {
+const newBuyEvent = async (offeringAddr, store) => {
+  if (offeringAddr) {
+    const indexing = {
+      events: {
+        // event Buy(address addr, address token, uint256 amount, uint256 timestamp);
+        Buy: {
+          keys: ['addr', 'tokenAddr', 'amount', 'timestamp']
+        }
+      },
+      contractAddress: offeringAddr
+    };
+    const indexerStore = new IndexerStore(indexing, MONGODB_URL);
+    const indexer = new Indexer(
+      indexerStore,
+      Offering.abi,
+      indexing.contractAddress,
+      ETH_NODE_URL
+    );
+    await indexer.syncAll({
+      fromBlock: 0,
+      batchSize: 5,
+    }, {
+      afterBlock: async (events) => {
+        if (events.length > 0) {
+          for (const event of events) {
+            if (event.event === 'Buy') {
+              try {
+                // keys: ['addr', 'tokenAddr', 'amount', 'timestamp']
+                await store.db('vestrade').collection('transaction').findOneAndUpdate({
+                  txId: event.transactionHash
+                }, {
+                  $set: {
+                    tokenAddr: event.args.tokenAddr,
+                    fromAddr: event.args.addr,
+                    amount: event.args.amount,
+                    timestamp: event.args.timestamp,
+                  }
+                }, {
+                  upsert: true
+                })
+              } catch (err) {
+                console.log(err)
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+}
+
+const syncOfferingEvent = async (store) => {
   const indexing = {
     events: {
       // event OfferingEvent(string name, address addr, address tokenAddr, uint256 supply, uint256 rate, uint64 startDate, uint64 endDate);
@@ -39,11 +110,11 @@ const syncOfferingEvent = async () => {
         keys: ['name', 'addr', 'tokenAddr', 'supply', 'rate', 'startDate', 'endDate']
       }
     },
-    contractAddress: '0x4D1191B9068BDA59d024921d490A2aFe8c7b9b8f'
+    contractAddress: '0x12113E6b3643184976EE4d71760CFdBbA3Cac811'
   };
-  const store = new Store(indexing, MONGODB_URL);
+  const indexerStore = new IndexerStore(indexing, MONGODB_URL);
   const indexer = new Indexer(
-    store,
+    indexerStore,
     OfferingFactory.abi,
     indexing.contractAddress,
     ETH_NODE_URL
@@ -55,28 +126,27 @@ const syncOfferingEvent = async () => {
     afterBlock: async (events) => {
       if (events.length > 0) {
         for (const event of events) {
-          const offeringAddr = event.args.addr
-          if (offeringAddr) {
-            const indexing = {
-              events: {
-                // event Buy(address addr, address token, uint256 amount, uint256 timestamp);
-                Buy: {
-                  keys: ['addr', 'tokenAddr', 'amount', 'timestamp']
+          if (event.event === 'OfferingEvent') {
+            try {
+              await newBuyEvent(event.args.addr, store)
+              // keys: ['name', 'addr', 'tokenAddr', 'supply', 'rate', 'startDate', 'endDate']
+              await store.db('vestrade').collection('offering').findOneAndUpdate({
+                tokenAddr: event.args.tokenAddr
+              }, {
+                $set: {
+                  name: event.args.name,
+                  tokenAddr: event.args.addr,
+                  supply: event.args.supply,
+                  rate: event.args.rate,
+                  startDate: event.args.startDate,
+                  endDate: event.args.endDate,
                 }
-              },
-              contractAddress: offeringAddr
-            };
-            const store = new Store(indexing, MONGODB_URL);
-            const indexer = new Indexer(
-              store,
-              Offering.abi,
-              indexing.contractAddress,
-              ETH_NODE_URL
-            );
-            await indexer.syncAll({
-              fromBlock: 0,
-              batchSize: 5,
-            });
+              }, {
+                upsert: true
+              })
+            } catch (err) {
+              console.log(err)
+            }
           }
         }
       }
@@ -85,7 +155,7 @@ const syncOfferingEvent = async () => {
 };
 
 const main = async () => {
-  const client = await MongoClient.connect(MONGODB_URL, { 
+  const client = await MongoClient.connect(MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -95,32 +165,11 @@ const main = async () => {
   const offeringAddrList = list.map(off => off.args.addr)
 
   for (const offeringAddr of offeringAddrList) {
-    if (offeringAddr) {
-      const indexing = {
-        events: {
-          // event Buy(address addr, address token, uint256 amount, uint256 timestamp);
-          Buy: {
-            keys: ['addr', 'tokenAddr', 'amount', 'timestamp']
-          }
-        },
-        contractAddress: offeringAddr
-      };
-      const store = new Store(indexing, MONGODB_URL);
-      const indexer = new Indexer(
-        store,
-        Offering.abi,
-        indexing.contractAddress,
-        ETH_NODE_URL
-      );
-      await indexer.syncAll({
-        fromBlock: 0,
-        batchSize: 5,
-      });
-    }
+    await newBuyEvent(offeringAddr, client)
   }
 
-  syncTokenCreated().then(() => { }).catch((error) => { console.error('Fatal error', error); });
-  syncOfferingEvent().then(() => {}).catch((error) => { console.error('Fatal error', error); });  
+  syncTokenCreated(client).then(() => { }).catch((error) => { console.error('Fatal error', error); });
+  syncOfferingEvent(client).then(() => { }).catch((error) => { console.error('Fatal error', error); });
 }
 
 main()

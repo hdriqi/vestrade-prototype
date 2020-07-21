@@ -935,12 +935,12 @@
     "1594793116625": {
       "events": {},
       "links": {},
-      "address": "0x1CFa77C49E83afA56CC2568d63B3fe57EE9157F7",
-      "transactionHash": "0xc7144279a2102733fc9c657c93644ed693cf8d7e5baa0061c38fe4be4106264b"
+      "address": "0x6c68E597304cb1bb46bd40B6CC57a19e47d5B725",
+      "transactionHash": "0xbcc6a48c9bad64a11391f8fa508a157223d5cdbe134e1a7f8dd453ef9ec58b1f"
     }
   },
   "schemaVersion": "3.0.23",
-  "updatedAt": "2020-07-15T06:05:54.011Z",
+  "updatedAt": "2020-07-21T00:23:25.674Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

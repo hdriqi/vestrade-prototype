@@ -45,7 +45,7 @@ export class Indexer {
     this.store.init();
     this.blockchain = new Ethereum(abi, contractAddress, readProviderUrl);
   }
-  async syncAll({ batchSize, fromBlock }, { afterBlock } = {  }) {
+  async syncAll({ batchSize, fromBlock }, { afterBlock } = {}) {
     const clientStatus = await this.blockchain.clientStatus();
     const { syncing, blockNumber } = clientStatus;
     const toBlock = blockNumber;
@@ -99,6 +99,9 @@ export class Indexer {
       normalizeEvent.transactionIndex = new BigNumber(normalizeEvent.transactionIndex);
       normalizeEvent.logIndex = new BigNumber(normalizeEvent.logIndex);
       this.store.put([normalizeEvent]);
+      if (afterBlock) {
+        await afterBlock([normalizeEvent])
+      }
     });
     this.blockchain.readAllEvents(
       fromBlock,
@@ -107,16 +110,16 @@ export class Indexer {
       async (events, status) => {
         if (events.length > 0) {
           await this.store.put(events);
+          if (afterBlock) {
+            await afterBlock(events)
+          }
         } else {
           // nothing
         }
         eventsCount += events.length;
         blocksCount = status.blockNumber;
         if (this.store.saveBlockInfo) {
-          this.store.saveBlockInfo({ blockNumber: status.blockNumber }).then(() => {});
-        }
-        if (afterBlock) {
-          await afterBlock(events)
+          this.store.saveBlockInfo({ blockNumber: status.blockNumber }).then(() => { });
         }
       },
     );
