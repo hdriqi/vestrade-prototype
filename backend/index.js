@@ -2,10 +2,12 @@ require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+var qpm = require('query-params-mongo')
 
 const Store = require('./Store')
 const Token = require('./controllers/Token')
 const Offering = require('./controllers/Offering')
+const Transaction = require('./controllers/Transaction')
 
 const { multipleUpload } = require('./middleware/multer')
 
@@ -19,8 +21,10 @@ const main = async () => {
   const store = new Store('mongodb://localhost:27017')
   await store.init()
 
-  const token = new Token(store)
-  const offering = new Offering(store)
+  const processQuery = qpm()
+  const token = new Token(store, processQuery)
+  const offering = new Offering(store, processQuery)
+  const transaction = new Transaction(store, processQuery)
 
   server.get('/tokens', async (req, res) => {
     const tokens = await token.get()
@@ -62,6 +66,14 @@ const main = async () => {
     res.json({
       success: 1,
       data: offerings
+    })
+  })
+
+  server.get('/transactions', async (req, res) => {
+    const txs = await transaction.get(req.query)
+    res.json({
+      success: 1,
+      data: txs
     })
   })
 
