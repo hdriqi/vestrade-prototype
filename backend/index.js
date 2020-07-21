@@ -2,7 +2,6 @@ require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-var qpm = require('query-params-mongo')
 
 const Store = require('./Store')
 const Token = require('./controllers/Token')
@@ -21,13 +20,12 @@ const main = async () => {
   const store = new Store('mongodb://localhost:27017')
   await store.init()
 
-  const processQuery = qpm()
-  const token = new Token(store, processQuery)
-  const offering = new Offering(store, processQuery)
-  const transaction = new Transaction(store, processQuery)
+  const token = new Token(store)
+  const offering = new Offering(store)
+  const transaction = new Transaction(store)
 
   server.get('/tokens', async (req, res) => {
-    const tokens = await token.get()
+    const tokens = await token.get(req.query)
     res.json({
       success: 1,
       data: tokens
@@ -62,7 +60,7 @@ const main = async () => {
   })
 
   server.get('/offerings', async (req, res) => {
-    const offerings = await offering.get()
+    const offerings = await offering.get(req.query)
     res.json({
       success: 1,
       data: offerings

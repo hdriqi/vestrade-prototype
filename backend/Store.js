@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb')
+const qpm = require('query-params-mongo')
 const AWS = require('aws-sdk')
 
 const BUCKET_NAME = 'vestrade'
@@ -13,6 +14,7 @@ const s3 = new AWS.S3({
 class Store {
   constructor(mongodbUrl) {
     this.mongodbUrl = mongodbUrl
+    this.processQuery = qpm()
   }
 
   async init() {

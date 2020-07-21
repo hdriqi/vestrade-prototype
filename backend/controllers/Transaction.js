@@ -1,14 +1,14 @@
 const BigNumber = require('bignumber.js')
 
 class Transaction {
-  constructor(store, processQuery) {
+  constructor(store) {
     this.store = store
-    this.processQuery = processQuery
     this.vestrade = this.store.client.db('vestrade')
   }
 
   async get(query = {}) {
-    const mongoQuery = this.processQuery(query)
+    const mongoQuery = this.store.processQuery(query)
+    console.log(mongoQuery)
     const result = await this.vestrade.collection('transaction').find(mongoQuery.filter, {
       projection: {
         _id: 0
