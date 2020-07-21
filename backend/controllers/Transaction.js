@@ -8,7 +8,6 @@ class Transaction {
 
   async get(query = {}) {
     const mongoQuery = this.store.processQuery(query)
-    console.log(mongoQuery)
     const result = await this.vestrade.collection('transaction').find(mongoQuery.filter, {
       projection: {
         _id: 0

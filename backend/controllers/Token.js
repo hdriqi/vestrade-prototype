@@ -5,8 +5,13 @@ class Token {
     this.vestrade = this.store.client.db('vestrade')
   }
 
-  async get() {
-    const result = await this.vestrade.collection('tokenDetail').find()
+  async get(query) {
+    const mongoQuery = this.store.processQuery(query)
+    const result = await this.vestrade.collection('tokenDetail').find(mongoQuery.filter, {
+      projection: {
+        _id: 0
+      }
+    })
     const arr = await result.toArray()
     return arr
   }
