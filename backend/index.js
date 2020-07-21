@@ -42,16 +42,14 @@ const main = async () => {
     const tokenAddr = req.params.id
     const newToken = await token.updateDetail({
       tokenAddr: tokenAddr,
-      name: req.body.name,
-      symbol: req.body.symbol,
       address: req.body.address,
       businessOwner: {
         name: req.body.businessOwnerName,
         avatarUrl: req.body.businessOwnerAvatarUrl,
         bio: req.body.businessOwnerBio,
       },
-      // prospectusUrl,
-      // thumbnailListUrl,
+      prospectusUrl: req.body.prospectusUrl,
+      thumbnailListUrl: req.body.thumbnailListUrl,
     })
     res.json({
       success: 1,
