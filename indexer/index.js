@@ -6,8 +6,8 @@ import { Indexer } from './src/index';
 import { MongoClient } from 'mongodb';
 import BigNumber from 'bignumber.js'
 
-const MONGODB_URL = 'mongodb://localhost:27017/eth-indexer'
-const ETH_NODE_URL = 'http://3.1.72.190:8545'
+const MONGODB_URL = 'mongodb://172.31.42.20:27017/eth-indexer'
+const ETH_NODE_URL = 'http://54.151.159.36:8545'
 
 const syncTokenCreated = async (store) => {
   const indexing = {
@@ -17,7 +17,7 @@ const syncTokenCreated = async (store) => {
         keys: ['name', 'addr']
       }
     },
-    contractAddress: '0xFbcA95f79905D2245e38EB3a11Ab117e1689B14C'
+    contractAddress: '0xA063A307521543E7CE26A6E07a44916A03c9691D'
   };
   const indexerStore = new IndexerStore(indexing, MONGODB_URL);
   const indexer = new Indexer(
@@ -111,7 +111,7 @@ const syncOfferingEvent = async (store) => {
         keys: ['name', 'addr', 'tokenAddr', 'supply', 'rate', 'startDate', 'endDate']
       }
     },
-    contractAddress: '0x12113E6b3643184976EE4d71760CFdBbA3Cac811'
+    contractAddress: '0x1C29105634d15CB1426792E425944855EF24ebCf'
   };
   const indexerStore = new IndexerStore(indexing, MONGODB_URL);
   const indexer = new Indexer(

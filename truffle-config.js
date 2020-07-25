@@ -21,9 +21,9 @@ module.exports = {
       network_id: "*"
     },
 		prototype: {
-      host: "3.1.72.190",
+      host: "54.151.159.36",
       port: 8545,
-      from: '0x0a2FA11b091c69797ce20f34cfE306A9b0Fd3f15',
+      from: '0x70e773440ce6D52e4215a93A7B6F897D5605302c',
       network_id: "*"
     }
 	}
