@@ -33,9 +33,10 @@ class Token {
         thumbnailListUrl: thumbnailListUrl
       }
     }, {
-      upsert: true
+      upsert: true,
+      returnOriginal: false
     })
-    return result
+    return result.value
   }
 }
 
