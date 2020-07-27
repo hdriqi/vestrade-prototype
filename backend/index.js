@@ -67,6 +67,14 @@ const main = async () => {
     })
   })
 
+  server.get('/launchpads', async (req, res) => {
+    const offerings = await offering.getLaunchpad(req.query)
+    res.json({
+      success: 1,
+      data: offerings
+    })
+  })
+
   server.get('/transactions', async (req, res) => {
     const txs = await transaction.get(req.query)
     res.json({
