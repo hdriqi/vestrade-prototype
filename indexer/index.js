@@ -7,6 +7,7 @@ import { MongoClient } from 'mongodb';
 import BigNumber from 'bignumber.js'
 
 const MONGODB_URL = 'mongodb://172.31.42.20:27017/eth-indexer'
+// const MONGODB_URL = 'mongodb://localhost:27017/eth-indexer'
 const ETH_NODE_URL = 'http://54.151.159.36:8545'
 
 const syncTokenCreated = async (store) => {
@@ -86,8 +87,8 @@ const newBuyEvent = async (offeringAddr, store) => {
                   $set: {
                     tokenAddr: event.args.tokenAddr,
                     fromAddr: event.args.addr,
-                    amount: event.args.amount,
-                    timestamp: event.args.timestamp,
+                    amount: new BigNumber(event.args.amount.value).toString(10),
+                    timestamp: new BigNumber(event.args.timestamp.value).toString(10),
                   }
                 }, {
                   upsert: true
@@ -138,10 +139,10 @@ const syncOfferingEvent = async (store) => {
                   addr: event.args.addr,
                   name: event.args.name,
                   tokenAddr: event.args.tokenAddr,
-                  supply: event.args.supply,
-                  rate: event.args.rate,
-                  startDate: event.args.startDate,
-                  endDate: event.args.endDate,
+                  supply: new BigNumber(event.args.supply.value).toString(10),
+                  rate: new BigNumber(event.args.rate.value).toString(10),
+                  startDate: new BigNumber(event.args.startDate.value).toString(10),
+                  endDate: new BigNumber(event.args.endDate.value).toString(10),
                 }
               }, {
                 upsert: true
