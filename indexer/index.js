@@ -132,11 +132,12 @@ const syncOfferingEvent = async (store) => {
               await newBuyEvent(event.args.addr, store)
               // keys: ['name', 'addr', 'tokenAddr', 'supply', 'rate', 'startDate', 'endDate']
               await store.db('vestrade').collection('offering').findOneAndUpdate({
-                tokenAddr: event.args.tokenAddr
+                addr: event.args.addr
               }, {
                 $set: {
+                  addr: event.args.addr,
                   name: event.args.name,
-                  tokenAddr: event.args.addr,
+                  tokenAddr: event.args.tokenAddr,
                   supply: event.args.supply,
                   rate: event.args.rate,
                   startDate: event.args.startDate,
