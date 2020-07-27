@@ -17,7 +17,7 @@ const main = async () => {
   server.use(bodyParser.urlencoded({ extended: true }))
   server.use(bodyParser.json())
 
-  const store = new Store('mongodb://localhost:27017')
+  const store = new Store(process.env.MONGO_URL)
   await store.init()
 
   const token = new Token(store)
