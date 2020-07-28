@@ -57,9 +57,9 @@ const newBuyEvent = async (offeringAddr, store) => {
   if (offeringAddr) {
     const indexing = {
       events: {
-        // event Buy(address addr, address token, uint256 amount, uint256 timestamp);
+        // event Buy(address addr, address tokenAddr, uint256 tokens, uint256 amount, uint256 timestamp);
         Buy: {
-          keys: ['addr', 'tokenAddr', 'amount', 'timestamp']
+          keys: ['addr', 'tokenAddr', 'tokens', 'amount', 'timestamp']
         }
       },
       contractAddress: offeringAddr
@@ -85,8 +85,10 @@ const newBuyEvent = async (offeringAddr, store) => {
                   txId: event.transactionHash
                 }, {
                   $set: {
+                    offeringAddr: offeringAddr,
                     tokenAddr: event.args.tokenAddr,
                     fromAddr: event.args.addr,
+                    tokens: new BigNumber(event.args.amount.tokens).toString(10),
                     amount: new BigNumber(event.args.amount.value).toString(10),
                     timestamp: new BigNumber(event.args.timestamp.value).toString(10),
                   }
