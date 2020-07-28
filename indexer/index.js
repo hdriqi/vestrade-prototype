@@ -108,8 +108,8 @@ const newBuyEvent = async (offeringAddr, store) => {
             }
             if (event.event === 'Active') {
               try {
-                await store.db('vestrade').collection('transaction').findOneAndUpdate({
-                  txId: event.transactionHash
+                await store.db('vestrade').collection('offering').findOneAndUpdate({
+                  addr: event.args.addr
                 }, {
                   $set: {
                     isActive: true,
