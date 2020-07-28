@@ -11,6 +11,8 @@ dotenv.config()
 
 const MONGODB_URL = process.env.MONGODB_URL
 const ETH_NODE_URL = 'http://54.151.159.36:8545'
+const VestradeERC20FactoryAddr = `0x38FFD2039F846FE395Ab905a9a8A5e267A5E75d0`
+const VestradeOfferingFactoryAddr = `0xfe311ee935519cD9538d664B3CbdDAb201103660`
 
 const syncTokenCreated = async (store) => {
   const indexing = {
@@ -20,7 +22,7 @@ const syncTokenCreated = async (store) => {
         keys: ['name', 'addr']
       }
     },
-    contractAddress: '0xA063A307521543E7CE26A6E07a44916A03c9691D'
+    contractAddress: VestradeERC20FactoryAddr
   };
   const indexerStore = new IndexerStore(indexing, MONGODB_URL);
   const indexer = new Indexer(
@@ -62,6 +64,9 @@ const newBuyEvent = async (offeringAddr, store) => {
         // event Buy(address addr, address tokenAddr, uint256 tokens, uint256 amount, uint256 timestamp);
         Buy: {
           keys: ['addr', 'tokenAddr', 'tokens', 'amount', 'timestamp']
+        },
+        Active: {
+          keys: ['addr', 'timestamp']
         }
       },
       contractAddress: offeringAddr
@@ -89,9 +94,25 @@ const newBuyEvent = async (offeringAddr, store) => {
                   $set: {
                     offeringAddr: offeringAddr,
                     tokenAddr: event.args.tokenAddr,
-                    fromAddr: event.args.addr,
+                    fromAddr: event.args.from,
                     tokens: new BigNumber(event.args.tokens.value).toString(10),
                     amount: new BigNumber(event.args.amount.value).toString(10),
+                    timestamp: new BigNumber(event.args.timestamp.value).toString(10),
+                  }
+                }, {
+                  upsert: true
+                })
+              } catch (err) {
+                console.log(err)
+              }
+            }
+            if (event.event === 'Active') {
+              try {
+                await store.db('vestrade').collection('transaction').findOneAndUpdate({
+                  txId: event.transactionHash
+                }, {
+                  $set: {
+                    isActive: true,
                     timestamp: new BigNumber(event.args.timestamp.value).toString(10),
                   }
                 }, {
@@ -116,7 +137,7 @@ const syncOfferingEvent = async (store) => {
         keys: ['name', 'addr', 'tokenAddr', 'supply', 'rate', 'startDate', 'endDate']
       }
     },
-    contractAddress: '0x1C29105634d15CB1426792E425944855EF24ebCf'
+    contractAddress: VestradeOfferingFactoryAddr
   };
   const indexerStore = new IndexerStore(indexing, MONGODB_URL);
   const indexer = new Indexer(

@@ -14,7 +14,8 @@ contract Vestrade_Offering is Ownable {
   uint64 public startDate;
   uint64 public endDate;
 
-  event Buy(address addr, address tokenAddr, uint256 tokens, uint256 amount, uint256 timestamp);
+  event Buy(address addr, address from, address tokenAddr, uint256 tokens, uint256 amount, uint256 timestamp);
+  event Active(address addr, uint256 timestamp);
 
   constructor(string memory _name, address _tokenAddr, uint256 _supply, uint256 _rate, uint64 _startDate, uint64 _endDate) public payable {
     name = _name;
@@ -40,6 +41,7 @@ contract Vestrade_Offering is Ownable {
       "Contract does not have enough balance"
     );
     init = true;
+    emit Active(address(this), now);
   }
 
   function withdraw() public onlyOwner  {
@@ -64,6 +66,6 @@ contract Vestrade_Offering is Ownable {
     );
     balance -= tokens;
 
-    emit Buy(address(msg.sender), address(tokenAddr), tokens, msg.value, now);
+    emit Buy(address(this), address(msg.sender), address(tokenAddr), tokens, msg.value, now);
   }
 }

@@ -941,12 +941,12 @@
     "1595651300303": {
       "events": {},
       "links": {},
-      "address": "0x801708CF40fEeC5F71C4dAE5Afb1dB11b5d36bF7",
-      "transactionHash": "0x7ef13d3855dc54fad08fe5c2066afad08a2cb58ec2ed7d301cb8bd62ae29bd3e"
+      "address": "0x155258851b2667A39e5844a94BC7BB074A87102D",
+      "transactionHash": "0xbe0da24b1175a56ba1b41b8084da00524af128938cef19d7a53c9db00d578095"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-07-25T04:28:33.355Z",
+  "updatedAt": "2020-07-28T10:43:04.503Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
