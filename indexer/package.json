@@ -28,6 +28,7 @@
     "babel-polyfill": "^6.26.0",
     "bignumber.js": "^5.0.0",
     "bn.js": "^4.11.8",
+    "dotenv": "^8.2.0",
     "ethjs": "^0.3.3",
     "ethjs-abi": "^0.2.1",
     "ethjs-query": "^0.2.6",

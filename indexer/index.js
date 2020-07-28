@@ -1,3 +1,4 @@
+import dotenv from 'dotenv'
 import ERC20Factory from '../client/src/contracts/Vestrade_ERC20_Factory.json';
 import OfferingFactory from '../client/src/contracts/Vestrade_Offering_Factory.json';
 import Offering from '../client/src/contracts/Vestrade_Offering.json';
@@ -6,8 +7,9 @@ import { Indexer } from './src/index';
 import { MongoClient } from 'mongodb';
 import BigNumber from 'bignumber.js'
 
-// const MONGODB_URL = 'mongodb://172.31.42.20:27017/eth-indexer'
-const MONGODB_URL = 'mongodb://localhost:27017/eth-indexer'
+dotenv.config()
+
+const MONGODB_URL = process.env.MONGODB_URL
 const ETH_NODE_URL = 'http://54.151.159.36:8545'
 
 const syncTokenCreated = async (store) => {
