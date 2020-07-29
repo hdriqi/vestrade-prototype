@@ -11,8 +11,8 @@ dotenv.config()
 
 const MONGODB_URL = process.env.MONGODB_URL
 const ETH_NODE_URL = 'http://54.151.159.36:8545'
-const VestradeERC20FactoryAddr = `0x38FFD2039F846FE395Ab905a9a8A5e267A5E75d0`
-const VestradeOfferingFactoryAddr = `0xfe311ee935519cD9538d664B3CbdDAb201103660`
+const VestradeERC20FactoryAddr = `0xCA6da58d1115Ae8dFBB8A19E3f55aeff3505c406`
+const VestradeOfferingFactoryAddr = `0x7dbc7C2712e8a2484908D6ED3464923442aBD43e`
 
 const syncTokenCreated = async (store) => {
   const indexing = {
@@ -110,7 +110,7 @@ const newBuyEvent = async (offeringAddr, store) => {
               try {
                 await store.db('vestrade').collection('offering').findOneAndUpdate({
                   addr: event.args.addr
-                }, {
+                }, {  
                   $set: {
                     isActive: true,
                     timestamp: new BigNumber(event.args.timestamp.value).toString(10),
