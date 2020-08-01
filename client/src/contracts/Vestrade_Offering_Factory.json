@@ -2865,10 +2865,76 @@
       "links": {},
       "address": "0x7dbc7C2712e8a2484908D6ED3464923442aBD43e",
       "transactionHash": "0x06e3218a13048aa18bdd8fcea5876814b12e882710ca5b3b91a00477201f00fb"
+    },
+    "1596274387008": {
+      "events": {
+        "0x38ba3a8240c51e004ea83855a0095dd58814ccbf1d35dffeb7312ca24e3fe801": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "name": "addr",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "tokenAddr",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "supply",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "rate",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "startDate",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "name": "endDate",
+              "type": "uint64"
+            }
+          ],
+          "name": "OfferingEvent",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x1C29105634d15CB1426792E425944855EF24ebCf",
+      "transactionHash": "0xb8e8ca9e015bab92090a78a8362b545ed0544a0e7e5a2b0049e963d33ce36790"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-07-29T01:25:56.768Z",
+  "updatedAt": "2020-08-01T09:33:26.294Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {
