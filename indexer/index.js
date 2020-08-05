@@ -10,7 +10,7 @@ import BigNumber from 'bignumber.js'
 dotenv.config()
 
 const MONGODB_URL = process.env.MONGODB_URL
-const ETH_NODE_URL = 'http://52.77.211.203:8545'
+const ETH_NODE_URL = 'http://52.77.210.249:8545'
 const VestradeERC20FactoryAddr = `0xA063A307521543E7CE26A6E07a44916A03c9691D`
 const VestradeOfferingFactoryAddr = `0x1C29105634d15CB1426792E425944855EF24ebCf`
 
