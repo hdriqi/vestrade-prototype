@@ -11,8 +11,8 @@ dotenv.config()
 
 const MONGODB_URL = process.env.MONGODB_URL
 const ETH_NODE_URL = 'http://52.77.210.249:8545'
-const VestradeERC20FactoryAddr = `0xA063A307521543E7CE26A6E07a44916A03c9691D`
-const VestradeOfferingFactoryAddr = `0x1C29105634d15CB1426792E425944855EF24ebCf`
+const VestradeERC20FactoryAddr = `0x087a1d1fAf8EEd1412Fb4d7EF4A84AF73496c4bf`
+const VestradeOfferingFactoryAddr = `0xa837D64441Db7e8EBa0c8392B6F50539322981fd`
 
 const syncTokenCreated = async (store) => {
   const indexing = {
