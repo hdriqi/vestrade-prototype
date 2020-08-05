@@ -2,7 +2,7 @@ const { MongoClient } = require('mongodb')
 const qpm = require('query-params-mongo')
 const AWS = require('aws-sdk')
 
-const BUCKET_NAME = 'vestrade'
+const BUCKET_NAME = process.env.BUCKET_NAME
 const IAM_USER_KEY = process.env.IAM_USER_KEY
 const IAM_USER_SECRET = process.env.IAM_USER_SECRET
 
